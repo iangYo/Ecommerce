@@ -19,7 +19,9 @@ app.use("/public/images", express.static(__dirname + "/public/images"));
 // Setup MongoDB
 const dbs = require("./setup/database");
 const dbURI = isProduction ? dbs.dbProduction : dbs.dbTest;
-mongoose.connect(dbURI, { useNewUrlParser: true });
+mongoose.connect(dbURI, { useNewUrlParser: true })
+.then(() => console.log('MongoDB Connected'))
+.catch((err) => console.log(err));
 
 // Setup EJS
 app.set("view engine", "ejs");
