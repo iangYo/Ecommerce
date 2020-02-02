@@ -98,6 +98,7 @@ class UserController {
                 enviarEmailRecovery({ usuario, recovery: recoveryData }, (error = null, success = null) => {
                     return res.render("recovery", { error, success });
                 })
+                return res.render("recovery", { error: null, success: true });
             }).catch(next);
         }).catch(next);
     }
