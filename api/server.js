@@ -17,11 +17,9 @@ app.use("/public", express.static(__dirname + "/public"));
 app.use("/public/images", express.static(__dirname + "/public/images"));
 
 // Setup MongoDB
-const dbs = require("./setup/database");
+const dbs = require("./config/database");
 const dbURI = isProduction ? dbs.dbProduction : dbs.dbTest;
-mongoose.connect(dbURI, { useNewUrlParser: true })
-.then(() => console.log('MongoDB Connected'))
-.catch((err) => console.log(err));
+mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 // Setup EJS
 app.set("view engine", "ejs");
