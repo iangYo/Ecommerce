@@ -13,7 +13,8 @@ class UserController {
 
     // GET /:id
     show(req, res, next) {
-        Usuario.findById(req.params.id).populate({ path: "loja" })
+        Usuario.findById(req.params.id)
+            // .populate({ path: "loja" })
             .then(usuario => {
                 if (!usuario) return res.status(401).json({ errors: "Usuario não registrado" });
                 return res.json({
@@ -31,14 +32,17 @@ class UserController {
     store(req, res, next) {
         const { nome, email, password, loja } = req.body;
 
-        if( !nome || !email || !password || !loja ) return res.status(422).json({ errors: "Preencha todos os campos de cadastro." });
+        if (!nome || !email || !password || !loja) return res.status(422).json({ errors: "Preencha todos os campos de cadastro." });
 
         const usuario = new Usuario({ nome, email, loja });
         usuario.setSenha(password);
 
         usuario.save()
             .then(() => res.json({ usuario: usuario.enviarAuthJSON() }))
-            .catch(next);
+            .catch((err) => {
+                console.log(err);
+                next(err);
+            });
     }
 
     // PUT /
@@ -97,8 +101,7 @@ class UserController {
             return usuario.save().then(() => {
                 enviarEmailRecovery({ usuario, recovery: recoveryData }, (error = null, success = null) => {
                     return res.render("recovery", { error, success });
-                })
-                return res.render("recovery", { error: null, success: true });
+                });
             }).catch(next);
         }).catch(next);
     }
@@ -106,7 +109,7 @@ class UserController {
     // GET /senha-recuperada
     showCompleteRecovery(req, res, next) {
         if (!req.query.token) return res.render("recovery", { error: "Token não identificado", success: null });
-        Usuario.findOne({ "recovery-token": req.query.token }).then(usuario => {
+        Usuario.findOne({ "recovery.token": req.query.token }).then(usuario => {
             if (!usuario) return res.render("recovery", { error: "Não existe usuário com este token", success: null });
             if (new Date(usuario.recovery.date) < new Date()) return res.render("recovery", { error: "Token expirado. Tente novamente.", success: null });
             return res.render("recovery/store", { error: null, success: null, token: req.query.token });

@@ -31,8 +31,8 @@ app.disable('x-powered-by');
 app.use(compression());
 
 // Setup Body Parser
-app.use(bodyParser.urlencoded({ extended: false, limit: 1.5*1024*1024 })); // 1.5Mb
-app.use(bodyParser.json({ limit: 1.5*1024*1024 }));
+app.use(bodyParser.urlencoded({ extended: false, limit: 1.5 * 1024 * 1024 })); // 1.5Mb
+app.use(bodyParser.json({ limit: 1.5 * 1024 * 1024 }));
 
 // Models
 require("./models");
@@ -50,7 +50,7 @@ app.use((req, res, next) => {
 // Routes error
 app.use((err, req, res, next) => {
    res.status(err.status || 500);
-   if(err.status !== 404) console.warn("Error: ", err.message, new Date());
+   if (err.status !== 404) console.warn("Error: ", err.message, new Date());
    res.json({ errors: { message: err.message, status: err.status } });
 });
 
