@@ -3,7 +3,7 @@ const uniqueValidator = require('mongoose-unique-validator');
 
 const LojaSchema = mongoose.Schema({
     nome: { type: String, required: true },
-    cnpj: { type: String, required: true, unique },
+    cnpj: { type: String, required: true, unique: true },
     email: { type: String },
     telefones: {
         type: [{ type: String }]
