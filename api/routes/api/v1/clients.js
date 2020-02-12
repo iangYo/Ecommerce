@@ -15,7 +15,7 @@ router.get('/', auth.required, LojaValidation.admin, clientController.index);
 router.get('/search/:search', auth.required, LojaValidation.admin, clientController.search);
 
 router.get('/admin/:id', auth.required, LojaValidation.admin, clientController.showAdmin);
-// router.get('/admin/:id/:pedidos', auth.required, LojaValidation.admin, clientController.showPedidosClientes);
+// router.get('/admin/:id/pedidos', auth.required, LojaValidation.admin, clientController.showPedidosClientes);
 
 router.put('/admin/:id', auth.required, LojaValidation.admin, clientController.updateAdmin);
 
