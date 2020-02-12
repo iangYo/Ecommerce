@@ -27,4 +27,4 @@ const ClienteSchema = Schema({
 
 ClienteSchema.plugin(mongoosePaginate);
 
-module.exports = mongoose.model('Cliente', ClienteSchema);
+module.exports = mongoose.model("Cliente", ClienteSchema);
