@@ -6,24 +6,23 @@ const { ClienteValidation } = require('../../../controllers/validations/clienteV
 const Validation = require('express-validation');
 const auth = require('../../auth');
 
-
-const clientController = new ClientController();
+const clienteController = new ClienteController();
 
 // ADMIN
-router.get('/', auth.required, LojaValidation.admin, Validation(ClienteValidation.index), clientController.index);
-// router.get('/search/:search/pedidos', auth.required, LojaValidation.admin, clientController.searchPedido);
-router.get('/search/:search', auth.required, LojaValidation.admin, Validation(ClienteValidation.search), clientController.search);
+router.get("/", auth.required, LojaValidation.admin, Validation(ClienteValidation.index), clienteController.index);
+// router.get('/search/:search/pedidos', auth.required, LojaValidation.admin, clienteController.searchPedido);
+router.get("/search/:search", auth.required, LojaValidation.admin, Validation(ClienteValidation.search), clienteController.search);
 
-router.get('/admin/:id', auth.required, LojaValidation.admin, Validation(ClienteValidation.showAdmin), clientController.showAdmin);
-// router.get('/admin/:id/pedidos', auth.required, LojaValidation.admin, clientController.showPedidosClientes);
+router.get("/admin/:id", auth.required, LojaValidation.admin, Validation(ClienteValidation.showAdmin), clienteController.showAdmin);
+// router.get('/admin/:id/pedidos', auth.required, LojaValidation.admin, clienteController.showPedidosClientes);
 
-router.put('/admin/:id', auth.required, LojaValidation.admin, Validation(ClienteValidation.updateAdmin), clientController.updateAdmin);
+router.put("/admin/:id", auth.required, LojaValidation.admin, Validation(ClienteValidation.updateAdmin), clienteController.updateAdmin);
 
 // CLIENT
-router.get('/:id', auth.required, Validation(ClienteValidation.show), clientController.show);
+router.get('/:id', auth.required, Validation(ClienteValidation.show), clienteController.show);
 
-router.post('/', Validation(ClienteValidation.store), clientController.store);
-router.put('/:id', auth.required, Validation(ClienteValidation.update), clientController.update);
-router.delete('/', auth.required, clientController.remove);
+router.post("/", Validation(ClienteValidation.store),  clienteController.store);
+router.put("/:id", auth.required, Validation(ClienteValidation.update), clienteController.update);
+router.delete("/:id", auth.required, clienteController.remove);
 
 module.exports = router;

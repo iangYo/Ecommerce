@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const Cliente = mongoose.model('Cliente');
+const Cliente = mongoose.model("Cliente");
 const Usuario = mongoose.model('Usuario');
 
 class ClienteController {
@@ -11,16 +11,16 @@ class ClienteController {
      */
 
     // GET / index
-    async index(req, res, next) {
+    async index(req,res,next){
         try {
             const offset = Number(req.query.offset) || 0;
             const limit = Number(req.query.limit) || 30;
             const clientes = await Cliente.paginate(
-                { loja: req.query.loja },
-                { offset, limit, populate: 'usuario' }
+                { loja: req.query.loja }, 
+                { offset, limit, populate: 'usuario'/*{ path:"usuario", select: "-salt -hash" }*/ }
             );
             return res.send({ clientes });
-        } catch (e) {
+        } catch(e){
             next(e);
         }
     }
@@ -91,7 +91,8 @@ class ClienteController {
     // GET /:id
     async show(req, res, next) {
         try {
-            const cliente = await Cliente.findOneAndDelete({ usuario: req.payload.id, loja: req.query.loja }).populate('usuario');
+            const cliente = await Cliente.findOne({ usuario: req.payload.id, loja: req.query.loja }).populate('usuario');
+            
             return res.send({ cliente });
         } catch (e) {
             next(e);
@@ -105,7 +106,7 @@ class ClienteController {
 
         const usuario = new Usuario({ nome, email, loja });
         usuario.setSenha(password);
-        const cliente = new Cliente({ nome, email, cpf, telefones, endereco, dataDeNascimento, usuario: usuario_id });
+        const cliente = new Cliente({ nome, cpf, telefones, endereco, loja, dataDeNascimento, usuario: usuario._id });
 
         try {
             await usuario.save();
