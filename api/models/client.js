@@ -3,7 +3,7 @@ const mongoosePaginate = require('mongoose-paginate');
 const Schema = mongoose.Schema;
 
 const ClienteSchema = Schema({
-    usuario: { type: Schema.Types.ObjectId, ref: 'Usuario', required: true },
+    usuario: { type: Schema.Types.ObjectId, ref: "Usuario", required: true },
     nome: { type: String, required: true },
     dataDeNascimento: { type: Date, required: true },
     cpf: { type: String, required: true },

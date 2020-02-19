@@ -1,6 +1,6 @@
 const router = require('express').Router();
 
-const ClienteController = require('../../../controllers/ClientController');
+const ClienteController = require('../../../controllers/ClienteController');
 const { LojaValidation } = require('../../../controllers/validations/lojaValidation');
 const { ClienteValidation } = require('../../../controllers/validations/clienteValidation');
 const Validation = require('express-validation');
@@ -21,7 +21,7 @@ router.put("/admin/:id", auth.required, LojaValidation.admin, Validation(Cliente
 // CLIENT
 router.get('/:id', auth.required, Validation(ClienteValidation.show), clienteController.show);
 
-router.post("/", Validation(ClienteValidation.store),  clienteController.store);
+router.post("/", Validation(ClienteValidation.store), clienteController.store);
 router.put("/:id", auth.required, Validation(ClienteValidation.update), clienteController.update);
 router.delete("/:id", auth.required, clienteController.remove);
 

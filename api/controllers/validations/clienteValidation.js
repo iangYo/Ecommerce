@@ -22,13 +22,13 @@ const ClienteValidation = {
 
     showAdmin: {
         params: {
-            search: Joi.string().alphanum().length(24).required()
+            id: Joi.string().alphanum().length(24).required()
         }
     },
 
     updateAdmin: {
         params: {
-            search: Joi.string().alphanum().length(24).required()
+            id: Joi.string().alphanum().length(24).required()
         },
         body: {
             nome: Joi.string().optional(),
@@ -82,7 +82,7 @@ const ClienteValidation = {
             loja: Joi.string().alphanum().length(24).required()
         },
         params: {
-            loja: Joi.string().alphanum().length(24).required()
+            id: Joi.string().alphanum().length(24).required()
         },
         body: {
             nome: Joi.string().optional(),
