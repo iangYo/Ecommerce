@@ -4,4 +4,7 @@ router.use("/usuarios", require("./users"));
 router.use("/clientes", require("./clients"));
 router.use("/lojas", require("./lojas"));
 
+router.use("/categorias", require("./categorias"));
+
+
 module.exports = router;
