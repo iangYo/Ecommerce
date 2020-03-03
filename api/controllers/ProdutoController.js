@@ -17,7 +17,6 @@ const getSort = (sortType) => {
             return {};
     }
 }
-
 class ProdutoController {
     // ADMIN 
 
