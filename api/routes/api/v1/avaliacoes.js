@@ -1,6 +1,6 @@
 const router = require('express').Router();
 
-const AvalicaoController = require('../../../controllers/AvaliacaoController');
+const AvaliacaoController = require('../../../controllers/AvaliacaoController');
 
 const { LojaValidation } = require('../../../controllers/validations/lojaValidation');
 const auth = require('../../auth');
