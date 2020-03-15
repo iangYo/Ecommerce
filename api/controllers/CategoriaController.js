@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const Categoria = mongoose.model('Categoria');
+const Produto = mongoose.model('Produto');
 
 class CategoriaController {
 
@@ -76,7 +77,7 @@ class CategoriaController {
     async showProdutos(req, res, next) {
         try {
             const { offset, limit } = req.query;
-            const produtos = await Produtos.paginate(
+            const produtos = await Produto.paginate(
                 { categoria: req.params.id },
                 { offset: Number(offset) || 0, limit: Number(limit) || 30 }
             );
@@ -102,7 +103,7 @@ class CategoriaController {
             });
 
             _produtos = await Promise.all(_produtos.map(async (produto) => {
-                if (!produto.include(produto._id.toString())) {
+                if (!produtos.includes(produto._id.toString())) {
                     produto.categoria = null;
                 } else {
                     produto.categoria = req.params.id;
@@ -111,7 +112,7 @@ class CategoriaController {
                 return produto;
             }));
 
-            const resultados = await Produtos.paginate(
+            const resultados = await Produto.paginate(
                 { categoria: req.params.id },
                 { offset: 0, limit: 30 }
             );

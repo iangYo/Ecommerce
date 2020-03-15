@@ -3,26 +3,33 @@ const mongoose = require('mongoose');
 const Produto = mongoose.model('Produto');
 const Categoria = mongoose.model('Categoria');
 
-const getSort = (sortType) => {
+const getSort = sortType => {
     switch (sortType) {
-        case "alfabetica_a-z":
+        case 'alfabetica_a-z':
             return { titulo: 1 };
-        case "alfabetica_z-a":
+        case 'alfabetica_z-a':
             return { titulo: -1 };
-        case "preco-crescente":
+        case 'preco-crescente':
             return { preco: 1 };
-        case "preco-decrescente":
+        case 'preco-decrescente':
             return { preco: -1 };
         default:
             return {};
     }
-}
+};
 class ProdutoController {
-    // ADMIN 
+    // ADMIN
 
     // POST / - store
     async store(req, res, next) {
-        const { titulo, descricao, categoria: categoriaId, preco, promocao, sku } = req.body;
+        const {
+            titulo,
+            descricao,
+            categoria: categoriaId,
+            preco,
+            promocao,
+            sku
+        } = req.body;
         const { loja } = req.query;
 
         try {
@@ -50,15 +57,26 @@ class ProdutoController {
     }
 
     async update(req, res, next) {
-        const { titulo, descricao, disponibilidade, categoria, preco, promocao, sku } = req.body;
+        const {
+            titulo,
+            descricao,
+            disponibilidade,
+            fotos,
+            categoria,
+            preco,
+            promocao,
+            sku
+        } = req.body;
 
         try {
-            const produto = await produto.findById(req.params.id);
+            const produto = await Produto.findById(req.params.id);
             if (!produto) return res.status(400).send({ error: 'Produto não encontrado' });
 
             if (titulo) produto.titulo = titulo;
             if (descricao) produto.descricao = descricao;
-            if (disponibilidade !== undefined) produto.disponibilidade = disponibilidade;
+            if (disponibilidade !== undefined)
+                produto.disponibilidade = disponibilidade;
+            if (fotos) produto.fotos = fotos;
             if (preco) produto.preco = preco;
             if (promocao) produto.promocao = promocao;
             if (sku) produto.sku = sku;
@@ -68,9 +86,12 @@ class ProdutoController {
                 const newCategoria = await Categoria.findById(categoria);
 
                 if (oldCategoria && newCategoria) {
-                    oldCategoria.produtos = oldCategoria.produtos.filter(item => item !== produto._id);
+                    oldCategoria.produtos = oldCategoria.produtos.filter(
+                        item => item.toString() !== produto._id.toString()
+                    );
                     newCategoria.produtos.push(produto._id);
                     produto.categoria = categoria;
+
                     await oldCategoria.save();
                     await newCategoria.save();
                 } else if (newCategoria) {
@@ -91,9 +112,10 @@ class ProdutoController {
     // PUT /images/:id
     async updateImages(req, res, next) {
         try {
-            const loja = req.query;
+            const { loja } = req.query;
             const produto = await Produto.findOne({ _id: req.params.id, loja });
-            if (!produto) return res.status(400).send({ error: 'Produto não encontrado.' });
+            if (!produto)
+                return res.status(400).send({ error: 'Produto não encontrado.' });
 
             const novasImagens = req.files.map(item => item.filename);
             produto.fotos = produto.fotos.filter(item => item).concat(novasImagens);
@@ -111,11 +133,14 @@ class ProdutoController {
 
         try {
             const produto = await Produto.findOne({ _id: req.params.id, loja });
-            if (!produto) return res.status(400).send({ error: 'Produto não encontrado' });
+            if (!produto)
+                return res.status(400).send({ error: 'Produto não encontrado' });
 
             const categoria = await Categoria.findById(produto.categoria);
             if (categoria) {
-                categoria.produtos = categoria.produtos.filter(item => item !== produto._id);
+                categoria.produtos = categoria.produtos.filter(
+                    item => item !== produto._id
+                );
 
                 await categoria.save();
             }
@@ -172,10 +197,9 @@ class ProdutoController {
                 {
                     loja: req.query.loja,
                     $or: [
-                        { "titulo": { $regex: search } },
-                        { "descricao": { $regex: search } },
-                        { "sku": { $regex: search } },
-
+                        { titulo: { $regex: search } },
+                        { descricao: { $regex: search } },
+                        { sku: { $regex: search } }
                     ]
                 },
                 { offset, limit, sort: getSort(req.query.sortType) }
@@ -189,9 +213,11 @@ class ProdutoController {
     // GET /:id - show
     async show(req, res, next) {
         try {
-            const produto = await Produto
-                .findById(req.query.id)
-                .populate(['avaliacoes,', 'variacoes', 'loja']);
+            const produto = await Produto.findById(req.query.id).populate([
+                'avaliacoes',
+                'variacoes',
+                'loja'
+            ]);
 
             return res.send({ produto });
         } catch (e) {
