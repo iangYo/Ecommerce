@@ -33,9 +33,10 @@ class AvaliacaoController {
         const { nome, texto, pontuacao } = req.body;
         const { loja, produto } = req.query;
         try {
-            const avaliacao = new Avaliacao({ nome, texto, loja, produto });
+            const avaliacao = new Avaliacao({ nome, texto, pontuacao, loja, produto });
 
-            const _produto = Produto.findById(produto);
+            const _produto = await Produto.findById(produto);
+            if (!_produto) return res.status(422).send({ error: 'Produto não existe' });
             _produto.avaliacoes.push(avaliacao._id);
 
             await _produto.save();

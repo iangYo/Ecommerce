@@ -134,20 +134,19 @@ class ProdutoController {
         const { loja } = req.query;
 
         try {
-            const produto = await Produto.findOne({ _id: req.params.id, loja });
-            if (!produto)
-                return res.status(400).send({ error: 'Produto não encontrado' });
-
-            const categoria = await Categoria.findById(produto.categoria);
+            const produto = await Produto.find({ _id: req.params.id, loja });
+            if (!produto) return res.status(400).send({ error: 'Produto não encontrado' });
+            
+            const categoria = await Categoria.findById(produto[0].categoria);
+            
             if (categoria) {
                 categoria.produtos = categoria.produtos.filter(
-                    item => item !== produto._id
+                    item => item.toString() !== produto[0]._id.toString()
                 );
-
                 await categoria.save();
             }
 
-            await produto.remove();
+            await produto[0].remove();
 
             return res.send({ deleted: true });
         } catch (e) {
