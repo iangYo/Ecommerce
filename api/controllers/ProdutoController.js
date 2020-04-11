@@ -4,6 +4,7 @@ const Produto = mongoose.model('Produto');
 const Categoria = mongoose.model('Categoria');
 
 const Avaliacao = mongoose.model('Avaliacao');
+const Variacao = mongoose.model('Variacao');
 
 const getSort = sortType => {
     switch (sortType) {
@@ -136,9 +137,9 @@ class ProdutoController {
         try {
             const produto = await Produto.find({ _id: req.params.id, loja });
             if (!produto) return res.status(400).send({ error: 'Produto não encontrado' });
-            
+
             const categoria = await Categoria.findById(produto[0].categoria);
-            
+
             if (categoria) {
                 categoria.produtos = categoria.produtos.filter(
                     item => item.toString() !== produto[0]._id.toString()
@@ -232,6 +233,17 @@ class ProdutoController {
         try {
             const avaliacoes = await Avaliacao.find({ produto: req.params.id });
             return res.send({ avaliacoes });
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    // VARIACOES
+    // GET /:id/variacoes - showVariacoes
+    async showVariacoes(req, res, next) {
+        try {
+            const variacoes = await Variacao.find({ produto: req.params.id });
+            return res.send({ variacoes });
         } catch (e) {
             next(e);
         }
